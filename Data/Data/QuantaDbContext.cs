@@ -1,13 +1,15 @@
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Data.Data
 {
-    public class QuantaDbContext : DbContext
+    public class QuantaDbContext : IdentityDbContext
     {
         public DbSet<Post> Posts { get; set; }
         
-        //public QuantaDbContext(DbContextOptions options) : base(options) { }
+        public QuantaDbContext(DbContextOptions options) : base(options) { }
+        public QuantaDbContext() { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

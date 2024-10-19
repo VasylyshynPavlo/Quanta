@@ -12,3 +12,4 @@
 /home/pashhun/RiderProjects/Quanta/Data/obj/Debug/net8.0/Data.pdb
 /home/pashhun/RiderProjects/Quanta/Data/obj/Debug/net8.0/Data.genruntimeconfig.cache
 /home/pashhun/RiderProjects/Quanta/Data/obj/Debug/net8.0/ref/Data.dll
+/home/pashhun/RiderProjects/Quanta/Data/obj/Debug/net8.0/Data.sourcelink.json
