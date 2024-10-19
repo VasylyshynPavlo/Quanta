@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Data.Data
 {
-    public class QuantaDbContext : IdentityDbContext
+    public class QuantaDbContext : IdentityDbContext<User>
     {
         public DbSet<Post> Posts { get; set; }
         
