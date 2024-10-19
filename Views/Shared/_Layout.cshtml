@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Quanta</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
+
+</head>
+<body>
+<header>
+    @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3"> *@
+    @*     <div class="container-fluid"> *@
+    @*         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Quanta</a> *@
+    @*         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" *@
+    @*                 aria-expanded="false" aria-label="Toggle navigation"> *@
+    @*             <span class="navbar-toggler-icon"></span> *@
+    @*         </button> *@
+    @*         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
+    @*             <ul class="navbar-nav flex-grow-1"> *@
+    @*                 <li class="nav-item"> *@
+    @*                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+    @*                 </li> *@
+    @*                 <li class="nav-item"> *@
+    @*                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+    @*                 </li> *@
+    @*             </ul> *@
+    @*         </div> *@
+    @*         <button id="themeToggle" class="btn" type="button"> *@
+    @*             <i id="themeIcon" class="fas"></i> *@
+    @*         </button> *@
+    @*         <button class="btn" type="button">test</button> *@
+    @*     </div> *@
+    @* </nav> *@
+    <div class="container-fluid d-flex justify-content-between align-items-baseline mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow p-1 flex-grow-1 mx-auto">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Quanta</a>
+            <div class="collapse navbar-collapse justify-content-center">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="btn" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn" asp-area="" asp-controller="Chat" asp-action="Index"><i class="fa-solid fa-comment"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <button id="themeToggle" class="btn" type="button"><i id="themeIcon" class="fas"></i></button>
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButtonDark" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButtonDark">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div> 
+
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2024 - Quanta - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    function setTheme(theme) {
+        document.body.setAttribute("data-bs-theme", theme);
+        localStorage.setItem("theme", theme);
+
+        const themeIcon = document.getElementById("themeIcon");
+
+        // Змінюємо іконку в залежності від теми
+        if (theme === "dark") {
+            themeIcon.classList.remove("fa-moon");
+            themeIcon.classList.add("fa-sun");
+        } else {
+            themeIcon.classList.remove("fa-sun");
+            themeIcon.classList.add("fa-moon");
+        }
+    }
+
+    function getSystemTheme() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const savedTheme = localStorage.getItem("theme");
+        const themeToApply = savedTheme || getSystemTheme();
+        setTheme(themeToApply);
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", function() {
+        const currentTheme = document.body.getAttribute("data-bs-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+    });
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
