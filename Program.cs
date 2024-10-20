@@ -8,7 +8,12 @@ var connectionString = builder.Configuration.GetConnectionString("LocalDb") ?? t
 
 builder.Services.AddDbContext<QuantaDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<QuantaDbContext>();
+builder.Services.AddDefaultIdentity<User>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
+}).AddEntityFrameworkStores<QuantaDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

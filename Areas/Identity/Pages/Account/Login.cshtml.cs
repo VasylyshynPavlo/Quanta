@@ -66,7 +66,7 @@ namespace Quanta.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
+            [DataType(DataType.Text)]
             public string Email { get; set; }
 
             /// <summary>

@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Create";
+}
+@model Post
+
+<div class="text-center">
+    <h2>Create New Post</h2>
+    <section>
+        <form id="create-post" method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for=Title class="form-control" aria-required="true" type="text"/>
+                <label asp-for=Title>Post Title</label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for=Content class="form-control" aria-required="true"></textarea>
+                <label asp-for=Content>Content</label>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div>
+                <button id="post-submit" type="submit" class="w-100 btn btn-lg btn-primary">Create Post</button>
+            </div>
+        </form>
+    </section>
+</div>
+<p class="text-center">That's all</p>

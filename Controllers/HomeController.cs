@@ -1,24 +1,43 @@
 using System.Diagnostics;
 using Data.Data;
+using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 using Quanta.Models;
 
 namespace Quanta.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private QuantaDbContext context = new();
-
-    public HomeController(ILogger<HomeController> logger)
+    private readonly UserManager<User> _userManager;
+    public HomeController(ILogger<HomeController> logger, UserManager<User> userManager)
     {
         _logger = logger;
+        _userManager = userManager;
     }
 
     public IActionResult Index()
     {
         var posts = context.Posts.ToList();
-        return View(posts);
+        
+        var postWithUsernames = posts.Select(post => new PostWithUsernameViewModel
+        {
+            Post = post,
+            Username = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.UserName ?? "Deleted"
+        }).ToList();
+
+        return View(postWithUsernames);
+    }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
     }
 
     public IActionResult Privacy()
@@ -30,6 +49,16 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    [HttpPost]
+    public IActionResult Create(Post model)
+    {
+        model.UserId = _userManager.GetUserId(User);
+        model.Created = DateTime.Now;
+        context.Posts.Add(model);
+        context.SaveChanges();
+        return RedirectToAction("Index");
     }
 
     public IActionResult DeletePostFromDb(int id)
