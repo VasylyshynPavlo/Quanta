@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YHruW2ccFn4VkgQ3PfJM205O2TUtFft/8whOqDbL+YY=",
+  "Hash": "BvjYQgx9T0K1m059AuCBRRs7LuOLZfkFK1+JfFDc60o=",
   "Source": "Quanta",
   "BasePath": "_content/Quanta",
   "Mode": "Default",
@@ -1231,6 +1231,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/home/pashhun/RiderProjects/Quanta/wwwroot/images/user.png",
+      "SourceId": "Quanta",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/pashhun/RiderProjects/Quanta/wwwroot/",
+      "BasePath": "_content/Quanta",
+      "RelativePath": "images/user.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/images/user.png"
     },
     {
       "Identity": "/home/pashhun/RiderProjects/Quanta/wwwroot/js/site.js",

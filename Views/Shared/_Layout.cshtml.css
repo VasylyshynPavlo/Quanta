@@ -43,16 +43,7 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
-body[data-bs-theme="dark"] a {
-  color: white;
-}
-body[data-bs-theme="light"] a {
-  color: black;
-}
 
-body[data-bs-theme="dark"] i {
-  color: white;
-}
 
 
 

@@ -1,6 +1,109 @@
 ﻿@{
-    ViewData["Title"] = "Chat";
+ViewData["Title"] = "Private Chat";
 }
 
-<div class="text-center">
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .row {
+        height: 100vh; /* Займає всю висоту екрана */
+    }
+
+    body[data-bs-theme=dark] .chat-item {
+        background: #2c3135;
+    }
+    body[data-bs-theme=dark] .chat-history {
+        background: #2c3135;
+        overflow-y: auto; /* Додаємо вертикальну прокрутку */
+        height: calc(100vh - 100px); /* Висота з урахуванням відступів */
+        display: flex;
+        flex-direction: column; /* Додаємо напрямок стовпчика */
+    }
+    .chat-content {
+        flex: 1; /* Займає все доступне місце */
+        overflow-y: auto; /* Додаємо вертикальну прокрутку для цього контейнера */
+    }
+    body[data-bs-theme=dark] .chat-item:hover {
+        background: #343a40;
+    }
+    body[data-bs-theme=dark] .chat-item.active {
+        background: #495057;
+    }
+
+    /* Додаткове налаштування для прокрутки */
+    .chat-history::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .chat-history::-webkit-scrollbar-thumb {
+        background: #495057;
+        border-radius: 10px;
+    }
+
+    .chat-history::-webkit-scrollbar-thumb:hover {
+        background: #343a40;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-3 chat">
+        @for (int i = 0; i < 5; i++)
+        {
+        <div class="chat-item d-flex align-items-start rounded mb-2" data-name="User @i" data-messages="Message content for user @i" onclick="selectChat(this)">
+            <div class="col-auto me-2">
+                <img src="~/images/user.png" alt="" width="55" height="55" class="rounded"/>
+            </div>
+            <div class="col-sm">
+                <div>
+                    <span class="fw-bold">User @i</span>
+                </div>
+                <div class="mt-1">
+                    <small>Message content for user @i</small>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="col-md-9 rounded chat-history" id="chatContent">
+        <div class="chat-content">
+            <p>Виберіть елемент чату, щоб побачити деталі.</p>
+        </div>
+        <div class="mt-2 p-2 border-top">
+            <p>Цей div завжди внизу.</p>
+        </div>
+    </div>
 </div>
+
+<script>
+    function selectChat(element) {
+        // Видаляємо клас active у всіх елементів
+        const chatItems = document.querySelectorAll('.chat-item');
+        chatItems.forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Додаємо клас active до вибраного елемента
+        element.classList.add('active');
+
+        // Оновлюємо вміст правої колонки
+        const name = element.getAttribute('data-name');
+        const messages = element.getAttribute('data-messages');
+        document.querySelector('.chat-content').innerHTML = `
+            <div class="message-container mt-2 p-2 border-top flex-column">
+                <span class="message-text">Це ваше повідомлення.</span>
+                <small class="text-muted">Дата: 20 жовтня 2024</small>
+            </div>
+            <div class="message-container mt-2 p-2 border-top flex-column">
+                <span class="message-text">Це ваше повідомлення.</span>
+                <small class="text-muted">Дата: 20 жовтня 2024</small>
+            </div>
+            <div class="message-container mt-2 p-2 border-top flex-column">
+                <span class="message-text">Це ваше повідомлення.</span>
+                <small class="text-muted">Дата: 20 жовтня 2024</small>
+            </div>
+        `;
+    }
+</script>

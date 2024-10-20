@@ -1,0 +1,26 @@
+@page
+@model AvatarModel
+@{
+ViewData["Title"] = "Manage Avatar";
+ViewData["ActivePage"] = ManageNavPages.Avatar;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="avatar-form" method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Avatar" class="form-control" autocomplete="avatar" aria-required="true" placeholder="Please enter new avatar url." />
+                <label asp-for="Input.Avatar" class="form-label"></label>
+                <span asp-validation-for="Input.Avatar" class="text-danger"></span>
+            </div>
+            <button id="change-avatar-button" type="submit" asp-page-handler="ChangeAvatar" class="w-100 btn btn-lg btn-primary">Change avatar</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

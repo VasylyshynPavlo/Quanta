@@ -25,10 +25,11 @@ public class HomeController : Controller
     {
         var posts = context.Posts.ToList();
         
-        var postWithUsernames = posts.Select(post => new PostWithUsernameViewModel
+        var postWithUsernames = posts.Select(post => new PostWithParameters
         {
             Post = post,
-            Username = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.UserName ?? "Deleted"
+            Username = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.UserName ?? "Deleted",
+            Avatar = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.Avatar ?? "/images/user.png"
         }).ToList();
 
         return View(postWithUsernames);

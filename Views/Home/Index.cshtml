@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home";
 }
 @using Microsoft.AspNetCore.Identity
-@model List<PostWithUsernameViewModel>
+@model List<PostWithParameters>
 
 <div class="text-center">
     
@@ -10,8 +10,10 @@
     {
         var post = item.Post;
         var username = item.Username;
+        var avatarUrl = item.Avatar;
         <div class="card mb-3 text-lg-start">
             <div class="card-header">
+                <img src="@avatarUrl" alt="Avatar" class="me-2 post-avatar" width="25" height="25" />
                 <strong>@username</strong>
             </div>
             <div class="card-body">

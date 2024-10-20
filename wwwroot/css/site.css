@@ -16,3 +16,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+body[data-bs-theme="dark"] a {
+  color: white;
+}
+body[data-bs-theme="light"] a {
+  color: black;
+}
+
+body[data-bs-theme="dark"] i {
+  color: white;
+}
+
+.post-avatar {
+  border-radius: 20%;
+  transition: transform 0.3s ease;
+}
+.post-avatar:hover {
+  transform: scale(3);
+}

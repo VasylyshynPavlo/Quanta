@@ -2,11 +2,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Data.Data;
 using Data.Entities;
+//using Quanta.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("LocalDb") ?? throw new InvalidOperationException("Connection string 'LocalDb' not found.");
 
 builder.Services.AddDbContext<QuantaDbContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddSignalR();
 
 builder.Services.AddDefaultIdentity<User>(options =>
 {
@@ -33,6 +36,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
@@ -45,5 +49,7 @@ app.MapControllerRoute(
 // {
 //     context.Response.Redirect("/Identity/Account/Register");
 // });
+
+//app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
