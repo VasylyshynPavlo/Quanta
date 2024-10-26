@@ -36,10 +36,10 @@ public class AvatarModel : PageModel
 
     private async Task LoadAsync(User user)
     {
-        Avatar = user.Avatar;
+        Avatar = !string.IsNullOrEmpty(user.Avatar) ? user.Avatar : "/images/user.png";
         Input = new InputModel
         {
-            Avatar = Avatar
+            Avatar = user.Avatar
         };
     }
 

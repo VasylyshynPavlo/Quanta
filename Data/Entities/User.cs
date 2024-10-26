@@ -9,6 +9,4 @@ public class User : IdentityUser
     public string? Avatar { get; set; }
     [PersonalData]
     public DateOnly? Birthday { get; set; }
-    [PersonalData]
-    public string? FullName { get; set; }
 }

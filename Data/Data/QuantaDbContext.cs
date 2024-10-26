@@ -7,7 +7,7 @@ namespace Data.Data
     public class QuantaDbContext : IdentityDbContext<User>
     {
         public DbSet<Post> Posts { get; set; }
-        public DbSet<PrivateMessage> PrivateMessages { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         
         public QuantaDbContext(DbContextOptions options) : base(options) { }
         public QuantaDbContext() { }

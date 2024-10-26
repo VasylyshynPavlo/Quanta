@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Create";
+ViewData["Title"] = "Create";
 }
 @model Post
 
@@ -8,16 +8,28 @@
     <section>
         <form id="create-post" method="post" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <!-- Title input -->
             <div class="form-floating mb-3">
-                <input asp-for=Title class="form-control" aria-required="true" type="text"/>
-                <label asp-for=Title>Post Title</label>
+                <input asp-for="Title" class="form-control" aria-required="true" type="text"/>
+                <label asp-for="Title">Post Title</label>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+
+            <!-- Content input -->
             <div class="form-floating mb-3">
-                <textarea asp-for=Content class="form-control" aria-required="true"></textarea>
-                <label asp-for=Content>Content</label>
+                <textarea asp-for="Content" class="form-control" aria-required="true"></textarea>
+                <label asp-for="Content">Content</label>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
+
+            <!-- Dynamic Image URL inputs -->
+            <div id="image-url-container" class="mb-3">
+                <label for="ImageUrl1" class="form-label">Image URL 1</label>
+                <input type="url" name="Images" id="ImageUrl1" class="form-control image-url" placeholder="Enter image URL"/>
+            </div>
+
+            <!-- Submit button -->
             <div>
                 <button id="post-submit" type="submit" class="w-100 btn btn-lg btn-primary">Create Post</button>
             </div>
@@ -25,3 +37,38 @@
     </section>
 </div>
 <p class="text-center">That's all</p>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('image-url-container');
+        let imageCounter = 1;
+
+        // Function to add a new image input field
+        function addImageInput() {
+            imageCounter++;
+            const newImageInput = document.createElement('div');
+            newImageInput.classList.add('mb-3');
+            newImageInput.innerHTML = `
+                    <label for="ImageUrl${imageCounter}" class="form-label">Image URL ${imageCounter}</label>
+                    <input type="url" name="Images" id="ImageUrl${imageCounter}" class="form-control image-url" placeholder="Enter image URL"/>
+                `;
+            container.appendChild(newImageInput);
+
+            // Add event listener to the new input
+            newImageInput.querySelector('.image-url').addEventListener('input', handleImageInput);
+        }
+
+        // Event handler for image input change
+        function handleImageInput(event) {
+            if (event.target.value.trim() !== '') {
+                event.target.removeEventListener('input', handleImageInput); // Remove listener to avoid multiple triggers
+                addImageInput();
+            }
+        }
+
+        // Add event listener to the first image input
+        document.getElementById('ImageUrl1').addEventListener('input', handleImageInput);
+    });
+</script>
+}

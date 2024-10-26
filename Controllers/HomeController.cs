@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Data.Data;
 using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,7 @@ public class HomeController : Controller
         {
             Post = post,
             Username = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.UserName ?? "Deleted",
-            Avatar = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.Avatar ?? "/images/user.png"
+            Avatar = _userManager.Users.FirstOrDefault(u => u.Id == post.UserId)?.Avatar ?? "/images/user.png",
         }).ToList();
 
         return View(postWithUsernames);
@@ -57,10 +58,15 @@ public class HomeController : Controller
     {
         model.UserId = _userManager.GetUserId(User);
         model.Created = DateTime.Now;
+        
+        model.Images ??= new List<string>();
+        
         context.Posts.Add(model);
         context.SaveChanges();
+
         return RedirectToAction("Index");
     }
+
 
     public IActionResult DeletePostFromDb(int id)
     {
@@ -92,4 +98,5 @@ public class HomeController : Controller
             return dateTime.ToString("yyyy.MM.dd | HH:mm"); // Повертаємо дату, якщо більше 12 годин
         }
     }
+    
 }

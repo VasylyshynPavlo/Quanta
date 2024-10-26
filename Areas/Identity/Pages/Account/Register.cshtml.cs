@@ -99,17 +99,6 @@ namespace Quanta.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
             
-            [Required]
-            [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
-            [DataType(DataType.Text)]
-            [Display(Name = "Username")]
-            public string Username { get; set; }
-            
-            [StringLength(40, ErrorMessage ="The {0} must be at least {2} and at max {1} characters long.")]
-            [DataType(DataType.Text)]
-            [Display(Name = "Full Name")]
-            public string FullName { get; set; }
-            
             [DataType(DataType.Date)]
             [Display(Name = "Birth Date")]
             public DateOnly BirthDate { get; set; }
@@ -133,7 +122,6 @@ namespace Quanta.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 
-                user.FullName = Input.FullName;
                 user.Birthday = Input.BirthDate;
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);

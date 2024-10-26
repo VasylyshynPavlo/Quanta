@@ -9581,6 +9581,10 @@
       "Microsoft.AspNetCore.Identity.UI >= 8.0.10",
       "Microsoft.AspNetCore.SignalR >= 1.1.0",
       "Microsoft.AspNetCore.SignalR.Client >= 8.0.10",
+      "Microsoft.AspNetCore.SignalR.Client.Core >= 8.0.10",
+      "Microsoft.AspNetCore.SignalR.Common >= 8.0.10",
+      "Microsoft.AspNetCore.SignalR.Core >= 1.1.0",
+      "Microsoft.AspNetCore.SignalR.Protocols.Json >= 8.0.10",
       "Microsoft.EntityFrameworkCore >= 9.0.0-rc.2.24474.1",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.0-rc.2.24474.1",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.0-rc.2.24474.1",
@@ -9637,6 +9641,22 @@
             "version": "[1.1.0, )"
           },
           "Microsoft.AspNetCore.SignalR.Client": {
+            "target": "Package",
+            "version": "[8.0.10, )"
+          },
+          "Microsoft.AspNetCore.SignalR.Client.Core": {
+            "target": "Package",
+            "version": "[8.0.10, )"
+          },
+          "Microsoft.AspNetCore.SignalR.Common": {
+            "target": "Package",
+            "version": "[8.0.10, )"
+          },
+          "Microsoft.AspNetCore.SignalR.Core": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
+          "Microsoft.AspNetCore.SignalR.Protocols.Json": {
             "target": "Package",
             "version": "[8.0.10, )"
           },

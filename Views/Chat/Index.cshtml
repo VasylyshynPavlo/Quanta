@@ -1,109 +1,312 @@
 ﻿@{
 ViewData["Title"] = "Private Chat";
+Layout = null;
 }
 
-<style>
-    html, body {
-        height: 100%;
-        margin: 0;
-    }
-
-    .row {
-        height: 100vh; /* Займає всю висоту екрана */
-    }
-
-    body[data-bs-theme=dark] .chat-item {
-        background: #2c3135;
-    }
-    body[data-bs-theme=dark] .chat-history {
-        background: #2c3135;
-        overflow-y: auto; /* Додаємо вертикальну прокрутку */
-        height: calc(100vh - 100px); /* Висота з урахуванням відступів */
-        display: flex;
-        flex-direction: column; /* Додаємо напрямок стовпчика */
-    }
-    .chat-content {
-        flex: 1; /* Займає все доступне місце */
-        overflow-y: auto; /* Додаємо вертикальну прокрутку для цього контейнера */
-    }
-    body[data-bs-theme=dark] .chat-item:hover {
-        background: #343a40;
-    }
-    body[data-bs-theme=dark] .chat-item.active {
-        background: #495057;
-    }
-
-    /* Додаткове налаштування для прокрутки */
-    .chat-history::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .chat-history::-webkit-scrollbar-thumb {
-        background: #495057;
-        border-radius: 10px;
-    }
-
-    .chat-history::-webkit-scrollbar-thumb:hover {
-        background: #343a40;
-    }
-</style>
-
-<div class="row">
-    <div class="col-md-3 chat">
-        @for (int i = 0; i < 5; i++)
-        {
-        <div class="chat-item d-flex align-items-start rounded mb-2" data-name="User @i" data-messages="Message content for user @i" onclick="selectChat(this)">
-            <div class="col-auto me-2">
-                <img src="~/images/user.png" alt="" width="55" height="55" class="rounded"/>
-            </div>
-            <div class="col-sm">
-                <div>
-                    <span class="fw-bold">User @i</span>
-                </div>
-                <div class="mt-1">
-                    <small>Message content for user @i</small>
-                </div>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Quanta</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Заборонити прокручування на всій сторінці */
         }
+
+        #messenger {
+            height: 100vh; /* Висота вікна */
+            display: flex; /* Встановлюємо flex для горизонтального розташування */
+        }
+
+        .container_ {
+            height: 100%;
+            display: flex;
+            flex-direction: column; /* Вертикальне розташування контейнера */
+        }
+
+        #inputs1 {
+            display: none;
+        }
+
+        .user-item {
+            cursor: pointer; /* Змінюємо курсор на вказівник для елементів списку */
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column; /* Вертикальне розташування для повідомлень */
+            flex-grow: 1; /* Займає весь доступний простір */
+            overflow-y: auto; /* Додаємо прокручування лише для списку повідомлень */
+        }
+
+        #messagesList {
+            flex-grow: 1; /* Займає весь доступний простір */
+            overflow-y: auto; /* Прокручування для списку повідомлень */
+        }
+        
+        .user {
+            background-color: #32363b;
+        }
+        .user:hover {
+            background-color: #495057;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="container_">
+    <div class="d-flex justify-content-around">
+        <a class="btn" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i></a>
+        <button id="themeToggle" class="btn" type="button"><i id="themeIcon" class="fas"></i></button>
     </div>
-    <div class="col-md-9 rounded chat-history" id="chatContent">
-        <div class="chat-content">
-            <p>Виберіть елемент чату, щоб побачити деталі.</p>
+    <div class="input-group" style="max-width: 400px;">
+        <input id="userId" type="text" class="form-control" placeholder="Enter ID or select user from list" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa-regular fa-copy"></i></button>
+    </div>
+    <div class="p-3" id="messenger">
+
+        <div class="col-md-3" id="userIdsList">
+
         </div>
-        <div class="mt-2 p-2 border-top">
-            <p>Цей div завжди внизу.</p>
+        <div class="col-md-9 p-3 messages">
+            <div id="messagesList"></div>
+            <div class="inputs input-group">
+                <input id="message" type="text" class="form-control" placeholder="Enter message..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button id="sendButton" class="btn btn-outline-secondary" type="button"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
 </div>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
+<script src="~/js/chat.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 <script>
-    function selectChat(element) {
-        // Видаляємо клас active у всіх елементів
-        const chatItems = document.querySelectorAll('.chat-item');
-        chatItems.forEach(item => {
-            item.classList.remove('active');
+    function setTheme(theme) {
+        document.body.setAttribute("data-bs-theme", theme);
+        localStorage.setItem("theme", theme);
+
+        const themeIcon = document.getElementById("themeIcon");
+
+        // Змінюємо іконку в залежності від теми
+        if (theme === "dark") {
+            themeIcon.classList.remove("fa-moon");
+            themeIcon.classList.add("fa-sun");
+        } else {
+            themeIcon.classList.remove("fa-sun");
+            themeIcon.classList.add("fa-moon");
+        }
+    }
+
+    function getSystemTheme() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const savedTheme = localStorage.getItem("theme");
+        const themeToApply = savedTheme || getSystemTheme();
+        setTheme(themeToApply);
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", function() {
+        const currentTheme = document.body.getAttribute("data-bs-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+    });
+</script>
+
+<template id="user-item-template">
+    <div class="d-flex align-items-center user-item p-2 rounded position-relative user">
+        <div class="avatar-container me-3">
+            <img src="/images/user.png" alt="Avatar" class="img rounded user-avatar" style="width: 50px; height: 50px;">
+        </div>
+        <div class="flex-grow-1">
+            <small class="user-name d-block">Username</small>
+            @*<small class="badge bg-primary position-absolute" style="bottom: 5px; right: 5px;">New</small>*@
+        </div>
+    </div>
+</template>
+
+<template id="user-my-message-template">
+    <div class="text-end mb-2">
+        <div class="other-msg-container d-inline-block">
+            <div class="my-msg d-inline-block bg-primary p-2 text-white" style="border-radius: 0.5rem 0.5rem 0 0.5rem;">
+
+            </div>
+            <small class="text-muted d-block my-msg-time" style="margin-top: -2px; font-size: 0.75rem;"></small>
+        </div>
+    </div>
+</template>
+<template id="user-other-message-template">
+    <div class="text-start mb-2">
+        <div class="other-msg-container d-inline-block">
+            <div class="other-msg bg-secondary p-2 text-white" style="border-radius: 0.5rem 0.5rem 0.5rem 0;">
+                
+            </div>
+            <small class="text-muted d-block other-msg-time" style="margin-top: -2px; font-size: 0.75rem;"></small>
+        </div>
+    </div>
+</template>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+<script>
+    const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
+
+    // Підключення до SignalR хаба
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chathub")
+        .build();
+
+    connection.start().then(function () {
+        console.log("Connected to SignalR");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    function formatDateTime(timestamp) {
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // Завантажити історію повідомлень
+    function loadChatHistory(userId) {
+        fetch(`/Chat/GetChatHistory?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                const messagesList = document.getElementById("messagesList");
+                messagesList.innerHTML = '';  // Очищуємо список перед завантаженням
+
+                data.messages.forEach(message => {
+                    const sender = message.senderId === currentUserId ? "You" : message.senderId;
+                    
+                    if (sender === "You") {
+                        const template = document.getElementById("user-my-message-template");
+                        const messageItem = template.content.cloneNode(true);
+                        messageItem.querySelector(".my-msg").textContent = message.message;
+                        messageItem.querySelector(".my-msg-time").textContent = formatDateTime(message.timestamp);
+                        messagesList.appendChild(messageItem);
+                    }
+                    else {
+                        const template = document.getElementById("user-other-message-template");
+                        const messageItem = template.content.cloneNode(true);
+                        messageItem.querySelector(".other-msg").textContent = message.message;
+                        messageItem.querySelector(".other-msg-time").textContent = formatDateTime(message.timestamp);
+                        messagesList.appendChild(messageItem);
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading chat history:', error));
+    }
+
+    // Завантажити історію користувачів
+    function loadUsersInvolved() {
+        fetch('/Chat/GetUsersInvolved')
+            .then(response => response.json())
+            .then(users => {
+                const userList = document.getElementById("userIdsList");
+                userList.innerHTML = '';  // Очищуємо список перед завантаженням
+
+                users.forEach(user => {
+                    const template = document.getElementById("user-item-template");
+                    const userItem = template.content.cloneNode(true);
+
+                    userItem.querySelector(".user-name").textContent = user.userName;
+                    userItem.querySelector(".user-avatar").src = user.avatar || '/images/user.png';
+
+                    // Додаємо обробник події для кожного елемента
+                    userItem.querySelector(".user").addEventListener("click", function() {
+                        document.getElementById("userId").value = user.id; // Підставляємо ID в input
+                        loadChatHistory(user.id); // Завантажуємо історію повідомлень для вибраного користувача
+                    });
+
+                    userList.appendChild(userItem);
+                });
+            })
+            .catch(error => console.error('Error loading users involved:', error));
+    }
+
+    // Завантажити історію при завантаженні сторінки
+    document.addEventListener("DOMContentLoaded", function () {
+        const userId = document.getElementById("userId").value;
+        if (userId) {
+            loadChatHistory(userId);
+        }
+
+        // Завантажити всіх користувачів, з якими спілкувався поточний користувач
+        loadUsersInvolved();
+    });
+
+    // Обробка отриманого повідомлення
+    connection.on("ReceiveMessage", function (senderId, message) {
+    
+        const displaySenderId = (senderId === currentUserId) ? "You" : senderId;
+        if (displaySenderId === "You") {
+            const template = document.getElementById("user-my-message-template");
+            const messageItem = template.content.cloneNode(true);
+            messageItem.querySelector(".my-msg").textContent = message;
+            loadUsersInvolved();
+            messagesList.appendChild(messageItem);
+        }
+        else {
+            const template = document.getElementById("user-other-message-template");
+            const messageItem = template.content.cloneNode(true);
+            messageItem.querySelector(".other-msg").textContent = message;
+            loadUsersInvolved();
+            messagesList.appendChild(messageItem);
+        }
+        
+    });
+
+    // Відправлення повідомлення
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        const userId = document.getElementById("userId").value;
+        const message = document.getElementById("message").value;
+
+        // Виклик методу SendMessage на сервері
+        connection.invoke("SendMessage", userId, message).catch(function (err) {
+            return console.error(err.toString());
         });
 
-        // Додаємо клас active до вибраного елемента
-        element.classList.add('active');
+        event.preventDefault();
+        loadUsersInvolved();
+    });
 
-        // Оновлюємо вміст правої колонки
-        const name = element.getAttribute('data-name');
-        const messages = element.getAttribute('data-messages');
-        document.querySelector('.chat-content').innerHTML = `
-            <div class="message-container mt-2 p-2 border-top flex-column">
-                <span class="message-text">Це ваше повідомлення.</span>
-                <small class="text-muted">Дата: 20 жовтня 2024</small>
-            </div>
-            <div class="message-container mt-2 p-2 border-top flex-column">
-                <span class="message-text">Це ваше повідомлення.</span>
-                <small class="text-muted">Дата: 20 жовтня 2024</small>
-            </div>
-            <div class="message-container mt-2 p-2 border-top flex-column">
-                <span class="message-text">Це ваше повідомлення.</span>
-                <small class="text-muted">Дата: 20 жовтня 2024</small>
-            </div>
-        `;
-    }
+    // Завантажити історію при зміні ID користувача
+    document.getElementById("userId").addEventListener("change", function () {
+        const userId = document.getElementById("userId").value;
+        loadChatHistory(userId);
+    });
+
+    // Завантажити історію при завантаженні сторінки
+    document.addEventListener("DOMContentLoaded", function () {
+        const userId = document.getElementById("userId").value;
+        if (userId) {
+            loadChatHistory(userId);
+        }
+
+        // Завантажуємо історію користувачів при завантаженні сторінки
+        loadUserHistory();
+    });
 </script>
+</body>
+</html>
+
+

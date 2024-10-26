@@ -9,10 +9,13 @@ ViewData["ActivePage"] = ManageNavPages.Avatar;
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
+        <img src="@Model.Avatar" class="rounded mx-auto d-block" alt="Avatar" width="150px" height="150px">
+
+
         <form id="avatar-form" method="post">
             <div asp-validation-summary="All" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.Avatar" class="form-control" autocomplete="avatar" aria-required="true" placeholder="Please enter new avatar url." />
+                <input asp-for="Input.Avatar" class="form-control" autocomplete="avatar" aria-required="true" placeholder="Please enter new avatar url."/>
                 <label asp-for="Input.Avatar" class="form-label"></label>
                 <span asp-validation-for="Input.Avatar" class="text-danger"></span>
             </div>
