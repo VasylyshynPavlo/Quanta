@@ -95,7 +95,7 @@ public class HomeController : Controller
         }
         else
         {
-            return dateTime.ToString("yyyy.MM.dd | HH:mm"); // Повертаємо дату, якщо більше 12 годин
+            return dateTime.ToString("yyyy.MM.dd | HH:mm");
         }
     }
     

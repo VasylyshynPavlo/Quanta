@@ -10,7 +10,8 @@
         var post = item.Post;
         var username = item.Username;
         var avatarUrl = item.Avatar;
-        <div class="card mb-3 text-lg-start">
+  
+        <div class="card mb-3 text-lg-start mx-auto" style="max-width: 50rem;">
             <div class="card-header">
                 <img src="@avatarUrl" alt="Avatar" class="me-2 post-avatar" width="25" height="25" />
                 <strong>@username</strong>
@@ -25,9 +26,8 @@
                 </div>
 
                 <p class="card-text">@post.Content</p>
-
-                @* Carousel for images *@
-                @if (post.Images != null && post.Images.Count > 0)
+                
+                @if (post.Images != null && post.Images.Count - 1 > 0)
                 {
                     <div id="carouselExampleIndicators-@post.Id" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">

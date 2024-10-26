@@ -19,8 +19,7 @@ namespace Quanta.Controllers
         public async Task<IActionResult> GetChatHistory(string userId)
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
-
-            // Отримуємо повідомлення між поточним користувачем і іншим користувачем
+            
             var messages = await _context.ChatMessages
                 .Where(m => (m.SenderId == currentUserId && m.ReceiverId == userId) ||
                             (m.SenderId == userId && m.ReceiverId == currentUserId))
@@ -33,20 +32,19 @@ namespace Quanta.Controllers
         public async Task<IActionResult> GetUsersInvolved()
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
-
-            // Отримуємо всі повідомлення
+            
             var messages = await _context.ChatMessages.ToListAsync();
-            var involvedUserIds = new HashSet<string>(); // Використовуємо HashSet для уникнення дублікатів
+            var involvedUserIds = new HashSet<string>();
 
             foreach (var message in messages)
             {
                 if (message.SenderId == currentUserId)
                 {
-                    involvedUserIds.Add(message.ReceiverId); // Додаємо ReceiverId, якщо SenderId - поточний користувач
+                    involvedUserIds.Add(message.ReceiverId);
                 }
                 else if (message.ReceiverId == currentUserId)
                 {
-                    involvedUserIds.Add(message.SenderId); // Додаємо SenderId, якщо ReceiverId - поточний користувач
+                    involvedUserIds.Add(message.SenderId); 
                 }
             }
             
@@ -60,7 +58,7 @@ namespace Quanta.Controllers
                 })
                 .ToListAsync();
 
-                Console.WriteLine($"Involved User IDs: {string.Join(", ", users)}"); // Додайте це для перевірки
+                Console.WriteLine($"Involved User IDs: {string.Join(", ", users)}");
                 return Json(users);
         }
         

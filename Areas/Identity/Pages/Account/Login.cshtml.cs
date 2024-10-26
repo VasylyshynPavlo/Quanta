@@ -95,8 +95,7 @@ namespace Quanta.Areas.Identity.Pages.Account
             }
 
             returnUrl ??= Url.Content("~/");
-
-            // Clear the existing external cookie to ensure a clean login process
+            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -112,13 +111,11 @@ namespace Quanta.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // Визначаємо, чи є введене значення електронною поштою або ім'ям користувача
                 var user = await _userManager.FindByEmailAsync(Input.UsernameOrEmail) ?? 
                            await _userManager.FindByNameAsync(Input.UsernameOrEmail);
 
                 if (user != null)
                 {
-                    // Якщо користувач знайдений, то проводимо вхід
                     var result = await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
@@ -146,8 +143,7 @@ namespace Quanta.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
-
-            // Якщо ми дійшли до цього, то щось пішло не так, повторно відобразити форму
+            
             return Page();
         }
     }

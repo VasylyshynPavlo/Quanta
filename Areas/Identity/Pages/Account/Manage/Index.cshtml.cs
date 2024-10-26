@@ -57,6 +57,8 @@ namespace Quanta.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Text)]
+            public string Id {get; set;}
+            [DataType(DataType.Text)]
             public string Username { get; set; }
             [Phone]
             [Display(Name = "Phone number")]
@@ -67,9 +69,11 @@ namespace Quanta.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var id = await _userManager.GetUserIdAsync(user);
             
             Input = new InputModel
             {
+                Id = user.Id,
                 Username = userName,
                 PhoneNumber = phoneNumber
             };

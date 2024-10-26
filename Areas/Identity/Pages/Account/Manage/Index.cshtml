@@ -11,6 +11,11 @@
     <div class="col-md-6">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3 input-group">
+                <input asp-for="Input.Id" class="form-control" id="input-id" placeholder="Id" aria-label="Id" aria-describedby="button-userid"/>
+                <label asp-for="Input.Id" class="form-label"></label>
+                <button class="btn btn-outline-secondary" type="button" id="button-userid" onclick="CopyToClipboard()"><i class="fa-regular fa-copy"></i></button>
+            </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Username" class="form-control" placeholder="Please choose your username." />
                 <label asp-for="Input.Username" class="form-label"></label>
@@ -25,6 +30,16 @@
     </div>
 </div>
 
+<script>
+    function CopyToClipboard() {
+        const inputElement = document.getElementById("input-id");
+        const valueToCopy = inputElement.value;
+
+        navigator.clipboard.writeText(valueToCopy);
+    }
+</script>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    
 }

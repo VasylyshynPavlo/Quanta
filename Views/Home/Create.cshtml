@@ -44,7 +44,6 @@ ViewData["Title"] = "Create";
         const container = document.getElementById('image-url-container');
         let imageCounter = 1;
 
-        // Function to add a new image input field
         function addImageInput() {
             imageCounter++;
             const newImageInput = document.createElement('div');
@@ -55,19 +54,16 @@ ViewData["Title"] = "Create";
                 `;
             container.appendChild(newImageInput);
 
-            // Add event listener to the new input
             newImageInput.querySelector('.image-url').addEventListener('input', handleImageInput);
         }
 
-        // Event handler for image input change
         function handleImageInput(event) {
             if (event.target.value.trim() !== '') {
-                event.target.removeEventListener('input', handleImageInput); // Remove listener to avoid multiple triggers
+                event.target.removeEventListener('input', handleImageInput);
                 addImageInput();
             }
         }
 
-        // Add event listener to the first image input
         document.getElementById('ImageUrl1').addEventListener('input', handleImageInput);
     });
 </script>

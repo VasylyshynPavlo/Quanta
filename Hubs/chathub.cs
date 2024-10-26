@@ -27,10 +27,8 @@ namespace Quanta.Hubs
 
             _context.ChatMessages.Add(chatMessage);
             await _context.SaveChangesAsync();
-
-            // Надсилаємо повідомлення іншому користувачу
+            
             await Clients.User(userId).SendAsync("ReceiveMessage", Context.UserIdentifier, message);
-            // Надсилаємо повідомлення собі
             await Clients.Caller.SendAsync("ReceiveMessage", "You", message);
         }
     }

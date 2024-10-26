@@ -17,18 +17,18 @@ Layout = null;
         html, body {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Заборонити прокручування на всій сторінці */
+            overflow: hidden;
         }
 
         #messenger {
-            height: 100vh; /* Висота вікна */
-            display: flex; /* Встановлюємо flex для горизонтального розташування */
+            height: 90%;
+            display: flex;
         }
 
         .container_ {
-            height: 100%;
+            height: 100vh;
             display: flex;
-            flex-direction: column; /* Вертикальне розташування контейнера */
+            flex-direction: column;
         }
 
         #inputs1 {
@@ -36,19 +36,24 @@ Layout = null;
         }
 
         .user-item {
-            cursor: pointer; /* Змінюємо курсор на вказівник для елементів списку */
+            cursor: pointer;
         }
 
         .messages {
             display: flex;
-            flex-direction: column; /* Вертикальне розташування для повідомлень */
-            flex-grow: 1; /* Займає весь доступний простір */
-            overflow-y: auto; /* Додаємо прокручування лише для списку повідомлень */
+            flex-direction: column;
+            flex-grow: 1;
+            overflow-y: auto;
         }
 
         #messagesList {
-            flex-grow: 1; /* Займає весь доступний простір */
-            overflow-y: auto; /* Прокручування для списку повідомлень */
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        #userIdsList {
+            max-height: 100%;
+            overflow-y: auto;
         }
         
         .user {
@@ -69,7 +74,7 @@ Layout = null;
     </div>
     <div class="input-group" style="max-width: 400px;">
         <input id="userId" type="text" class="form-control" placeholder="Enter ID or select user from list" aria-label="Recipient's username" aria-describedby="button-addon2">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa-regular fa-copy"></i></button>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="CopyToClipboard()"><i class="fa-regular fa-copy"></i></button>
     </div>
     <div class="p-3" id="messenger">
 
@@ -99,7 +104,6 @@ Layout = null;
 
         const themeIcon = document.getElementById("themeIcon");
 
-        // Змінюємо іконку в залежності від теми
         if (theme === "dark") {
             themeIcon.classList.remove("fa-moon");
             themeIcon.classList.add("fa-sun");
@@ -133,7 +137,6 @@ Layout = null;
         </div>
         <div class="flex-grow-1">
             <small class="user-name d-block">Username</small>
-            @*<small class="badge bg-primary position-absolute" style="bottom: 5px; right: 5px;">New</small>*@
         </div>
     </div>
 </template>
@@ -159,11 +162,18 @@ Layout = null;
     </div>
 </template>
 
+<script>
+    function CopyToClipboard() {
+        const inputElement = document.getElementById("userId");
+        const valueToCopy = inputElement.value;
+
+        navigator.clipboard.writeText(valueToCopy);
+    }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
 <script>
     const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
 
-    // Підключення до SignalR хаба
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/chathub")
         .build();
@@ -176,17 +186,27 @@ Layout = null;
 
     function formatDateTime(timestamp) {
         const date = new Date(timestamp);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
+        const now = new Date();
+        const timeSpan = (now - date) / 1000; // Різниця в секундах
 
-        return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
+        if (timeSpan < 60) {
+            return `${Math.floor(timeSpan)} seconds ago`;
+        } else if (timeSpan < 3600) {
+            return `${Math.floor(timeSpan / 60)} minutes ago`;
+        } else if (timeSpan < 43200) { // 12 годин у секундах
+            return `${Math.floor(timeSpan / 3600)} hours ago`;
+        } else {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            return `${year}.${month}.${day} | ${hours}:${minutes}`;
+        }
     }
 
-    // Завантажити історію повідомлень
+
     function loadChatHistory(userId) {
         fetch(`/Chat/GetChatHistory?userId=${userId}`)
             .then(response => response.json())
@@ -216,13 +236,12 @@ Layout = null;
             .catch(error => console.error('Error loading chat history:', error));
     }
 
-    // Завантажити історію користувачів
     function loadUsersInvolved() {
         fetch('/Chat/GetUsersInvolved')
             .then(response => response.json())
             .then(users => {
                 const userList = document.getElementById("userIdsList");
-                userList.innerHTML = '';  // Очищуємо список перед завантаженням
+                userList.innerHTML = '';
 
                 users.forEach(user => {
                     const template = document.getElementById("user-item-template");
@@ -233,8 +252,8 @@ Layout = null;
 
                     // Додаємо обробник події для кожного елемента
                     userItem.querySelector(".user").addEventListener("click", function() {
-                        document.getElementById("userId").value = user.id; // Підставляємо ID в input
-                        loadChatHistory(user.id); // Завантажуємо історію повідомлень для вибраного користувача
+                        document.getElementById("userId").value = user.id;
+                        loadChatHistory(user.id);
                     });
 
                     userList.appendChild(userItem);
@@ -243,18 +262,15 @@ Layout = null;
             .catch(error => console.error('Error loading users involved:', error));
     }
 
-    // Завантажити історію при завантаженні сторінки
     document.addEventListener("DOMContentLoaded", function () {
         const userId = document.getElementById("userId").value;
         if (userId) {
             loadChatHistory(userId);
         }
 
-        // Завантажити всіх користувачів, з якими спілкувався поточний користувач
         loadUsersInvolved();
     });
 
-    // Обробка отриманого повідомлення
     connection.on("ReceiveMessage", function (senderId, message) {
     
         const displaySenderId = (senderId === currentUserId) ? "You" : senderId;
@@ -275,12 +291,10 @@ Layout = null;
         
     });
 
-    // Відправлення повідомлення
     document.getElementById("sendButton").addEventListener("click", function (event) {
         const userId = document.getElementById("userId").value;
         const message = document.getElementById("message").value;
 
-        // Виклик методу SendMessage на сервері
         connection.invoke("SendMessage", userId, message).catch(function (err) {
             return console.error(err.toString());
         });
@@ -289,20 +303,17 @@ Layout = null;
         loadUsersInvolved();
     });
 
-    // Завантажити історію при зміні ID користувача
     document.getElementById("userId").addEventListener("change", function () {
         const userId = document.getElementById("userId").value;
         loadChatHistory(userId);
     });
 
-    // Завантажити історію при завантаженні сторінки
     document.addEventListener("DOMContentLoaded", function () {
         const userId = document.getElementById("userId").value;
         if (userId) {
             loadChatHistory(userId);
         }
 
-        // Завантажуємо історію користувачів при завантаженні сторінки
         loadUserHistory();
     });
 </script>

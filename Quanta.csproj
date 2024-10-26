@@ -31,6 +31,7 @@
       <_ContentIncludedByDefault Remove="Pages\_ValidationScriptsPartial.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\_ViewStart.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Settings\Index.cshtml" />
     </ItemGroup>
 
 </Project>
